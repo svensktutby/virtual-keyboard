@@ -1,14 +1,10 @@
 {
-  "extends": "eslint-config-airbnb-base",
+  "extends": "eslint-config-airbnb-base/whitespace",
   "env": {
     "browser": true,
     "commonjs": true,
     "es6": true,
     "node": true
-  },
-  "globals": {
-    "$": true,
-    "jQuery": true
   },
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -18,7 +14,6 @@
     "semi": ["error", "always"],
     "quotes": ["error", "single"],
     "no-console": "warn",
-    "max-len": ["error", 120, 2, { "ignoreUrls": true }],
     "no-plusplus": "off",
     "eol-last": "off",
     "no-unused-vars": "warn",

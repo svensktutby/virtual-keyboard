@@ -1,3 +1,16 @@
+/* animations */
+@-webkit-keyframes back-pulse {
+  50% {
+    background-color: rgba(193, 193, 195, 0.5);
+  }
+}
+
+@keyframes back-pulse {
+  50% {
+    background-color: rgba(193, 193, 195, 0.5);
+  }
+}
+
 /* base styles */
 .page {
   box-sizing: border-box;
@@ -7,12 +20,6 @@
   font-size: 16px;
 
   scroll-behavior: smooth;
-}
-
-.page__inner {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 *,
@@ -35,7 +42,8 @@ body {
   color: #333;
   word-break: break-word;
 
-  background-color: #fff;
+  background-color: #9d9ea3;
+  background-image: linear-gradient(to left, #bdbbbe 0%, #9d9ea3 100%), radial-gradient(88% 271%, rgba(255, 255, 255, 0.25) 0%, rgba(254, 254, 254, 0.25) 1%, rgba(0, 0, 0, 0.25) 100%), radial-gradient(50% 100%, rgba(255, 255, 255, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 svg {
@@ -45,4 +53,88 @@ svg {
 img {
   max-width: 100%;
   height: auto;
+}
+
+.container {
+  width: 100%;
+  max-width: 830px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+/* screen */
+.screen {
+  width: 100%;
+  height: 300px;
+  padding: 5px;
+  margin-bottom: 10px;
+
+  color: #98c379;
+  font-size: 1.5em;
+
+  background-color: #333;
+  border: 8px solid #dfdfe1;
+  border-radius: 5px;
+
+  resize: none;
+  box-shadow: 1px 5px 4px #848789, 0 -1px 4px #848789;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+/* keyboard */
+.keyboard-wrapper {
+  width: 100%;
+  padding-top: 300px;
+}
+
+.keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+
+  background-color: #dfdfe1;
+  border-radius: 5px;
+  box-shadow: 1px 5px 4px #848789, 0 -1px 4px #848789;
+}
+
+.key {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  padding: 5px;
+
+  background-color: #eeeef0;
+  border: 0;
+  border-radius: 3px;
+  box-shadow: -1px 3px 2px #848789, 0 -1px 2px #848789;
+  cursor: pointer;
+
+  transition-duration: 0.5s;
+  transition-property: background-color;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover {
+    background-color: #c1c1c3;
+
+    animation-name: back-pulse;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-delay: 0.5s;
+    animation-iteration-count: infinite;
+  }
+
+  &:active {
+    box-shadow: 0 1px 1px #848789, 0 0 1px #848789;
+  }
 }
