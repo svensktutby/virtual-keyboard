@@ -55,10 +55,10 @@ const webpackConfig = merge(
     },
   },
   pug(),
-  // images(),
+  images(),
   // spriteSVG()
   // fonts(),
-  lintJS(),
+  // lintJS(),
   lintCSS(),
   babel(),
 );
