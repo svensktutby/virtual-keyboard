@@ -21,7 +21,8 @@
     "build": "NODE_ENV=production webpack --progress",
     "serve": "static build",
     "test:lint": "eslint . --cache",
-    "test:lint:fix": "eslint . --cache --fix"
+    "test:lint:fix": "eslint . --cache --fix",
+    "deploy": "gh-pages -d build"
   },
   "license": "ISC",
   "devDependencies": {
@@ -37,6 +38,7 @@
     "eslint-plugin-import": "^2.20.2",
     "favicons-webpack-plugin": "^3.0.1",
     "file-loader": "^6.0.0",
+    "gh-pages": "^2.2.0",
     "html-webpack-plugin": "^4.0.3",
     "image-webpack-loader": "^6.0.0",
     "mini-css-extract-plugin": "^0.9.0",
