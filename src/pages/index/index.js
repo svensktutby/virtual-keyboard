@@ -1,7 +1,7 @@
 import 'normalize.css';
 import './index.scss';
 import {
-  setKeysName, setKeysSize, isCharKey, typeChar, runOnKeys,
+  setKeysName, setKeysSize, isCharKey, typeChar,
 } from '../../components/utils';
 
 const config = require('../../components/data');
@@ -15,7 +15,7 @@ function renderKeyboard() {
                               <div class="screen">
                                 <div class="message">
                                   <span class="message__text">
-                                    ShiftLeft (&#8679;) + AltLeft (&#8997;) toggle languages
+                                    ControlLeft (&#8963;) + AltLeft (&#8997;) toggle languages
                                   </span>
                                   </div>
                                 <div class="window">
@@ -63,15 +63,15 @@ let isUpperCase = upperCase !== 'lower';
 let isEnglish = lang === 'en';
 const pressed = new Set();
 
-function toggleKeysChar(thisLang = lang, caps = upperCase) {
-  window.localStorage.setItem('lang', thisLang);
+function toggleKeysChar(currentLang = lang, caps = upperCase) {
+  window.localStorage.setItem('lang', currentLang);
   window.localStorage.setItem('upperCase', caps);
 
   keyList.forEach((item) => {
     if (isCharKey(item)) {
       const code = item.id;
       // eslint-disable-next-line no-param-reassign
-      item.textContent = setKeysName(config[code][lang][caps]);
+      item.textContent = setKeysName(config[code][currentLang][caps]);
     }
   });
 }
@@ -119,18 +119,13 @@ document.addEventListener('keydown', (evt) => {
     toggleCaps();
   }
 
-  if (code === 'ShiftLeft' || code === 'AltLeft') {
+  if (code === 'ControlLeft' || code === 'AltLeft') {
     pressed.add(code);
 
-    if (pressed.has('ShiftLeft') && pressed.has('AltLeft')) {
-      console.log(pressed);
-      console.log(upperCase);
+    if (pressed.has('ControlLeft') && pressed.has('AltLeft')) {
       pressed.clear();
 
       toggleLang();
-      // lang === 'en'
-      //   ? toggleKeysChar('ru', upperCase)
-      //   : toggleKeysChar('en', upperCase);
     }
   }
 });
@@ -168,6 +163,16 @@ keyboard.addEventListener('mousedown', (evt) => {
       target.classList.add('active');
     } else {
       target.classList.remove('active');
+    }
+  }
+
+  if (target.id === 'ControlLeft' || target.id === 'AltLeft') {
+    pressed.add(target.id);
+
+    if (pressed.has('ControlLeft') && pressed.has('AltLeft')) {
+      pressed.clear();
+
+      toggleLang();
     }
   }
 });

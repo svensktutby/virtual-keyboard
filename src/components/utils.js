@@ -78,16 +78,6 @@ function setKeysSize(item) {
   }
 }
 
-function setCaretAtEnd(elem) {
-  const node = elem;
-  const elemLen = node.value.length;
-  if (node.selectionStart || node.selectionStart === 0) {
-    node.selectionStart = elemLen;
-    node.selectionEnd = elemLen;
-    node.focus();
-  }
-}
-
 function isCharKey(key) {
   const text = key.textContent.trim();
   return text.length && text.charCodeAt(0) < 8500;
@@ -131,25 +121,6 @@ function typeChar(elem, target, evt) {
   }
 }
 
-function runOnKeys(func, ...codes) {
-  const pressed = new Set();
-  document.addEventListener('keydown', (evt) => {
-    pressed.add(evt.code);
-
-    for (let i = 0; i < codes.length; i++) {
-      if (!pressed.has(codes[i])) {
-        return;
-      }
-    }
-
-    pressed.clear();
-    func();
-  });
-  document.addEventListener('keyup', (evt) => {
-    pressed.delete(evt.code);
-  });
-}
-
 export {
-  setKeysName, setKeysSize, setCaretAtEnd, isCharKey, typeChar, runOnKeys,
+  setKeysName, setKeysSize, isCharKey, typeChar,
 };
