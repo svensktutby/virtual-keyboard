@@ -7,11 +7,17 @@ import {
 const config = require('../../components/data');
 
 const lang = window.localStorage.getItem('lang') || 'en';
+const upperCase = window.localStorage.getItem('upperCase') || 'lower';
 
 function renderKeyboard() {
   document.body.innerHTML = `<div class='container'>
                             <div class='keyboard-wrapper'>
                               <div class="screen">
+                                <div class="message">
+                                  <span class="message__text">
+                                    ShiftLeft (&#8679;) + AltLeft (&#8997;) toggle languages
+                                  </span>
+                                  </div>
                                 <div class="window">
                                   <span></span>
                                   <textarea class='text-edit' name='text-edit' id='text-edit'></textarea>
@@ -31,29 +37,36 @@ function renderKeys() {
     key.className = (`key ${setKeysSize(item)}`);
     key.type = 'button';
     key.id = `${item}`;
-    key.dataset.key = `${config[item][lang].lower}`;
-    key.innerHTML = `${setKeysName(config[item][lang].lower)}`;
+    key.dataset.key = `${config[item][lang][upperCase]}`;
+    key.innerHTML = `${setKeysName(config[item][lang][upperCase])}`;
 
     fragment.append(key);
   });
 
   document.querySelector('#keyboard').append(fragment);
+
+  if (upperCase === 'upper') {
+    document.querySelector('#CapsLock').classList.add('active');
+  }
 }
 
 function initKeyboard() {
   renderKeyboard();
   renderKeys();
 }
-
 initKeyboard();
+
 const keyboard = document.querySelector('#keyboard');
 const textEdit = document.querySelector('#text-edit');
 const keyList = keyboard.querySelectorAll('.key');
-let isUpperCase = false;
+let isUpperCase = upperCase !== 'lower';
+let isEnglish = lang === 'en';
 const pressed = new Set();
 
-function toggleKeysChar(thisLang = lang, caps = 'lower') {
+function toggleKeysChar(thisLang = lang, caps = upperCase) {
   window.localStorage.setItem('lang', thisLang);
+  window.localStorage.setItem('upperCase', caps);
+
   keyList.forEach((item) => {
     if (isCharKey(item)) {
       const code = item.id;
@@ -64,14 +77,16 @@ function toggleKeysChar(thisLang = lang, caps = 'lower') {
 }
 
 const toggleLang = () => {
-  if (lang === 'en') {
-    toggleKeysChar('ru', 'lower');
+  if (isEnglish) {
+    isEnglish = false;
+    toggleKeysChar('ru', upperCase);
   } else {
-    toggleKeysChar('en', 'lower');
+    isEnglish = true;
+    toggleKeysChar('en', upperCase);
   }
 };
 
-const shiftHandler = () => {
+const toggleCaps = () => {
   if (!isUpperCase) {
     isUpperCase = true;
     toggleKeysChar(lang, 'upper');
@@ -87,18 +102,36 @@ document.addEventListener('keydown', (evt) => {
     key,
   } = evt;
 
-  pressed.add(code);
+  const targetKey = keyboard.querySelector(`#${code}`);
 
-  keyboard.querySelector(`#${code}`).classList.add('active');
-  textEdit.focus();
+  targetKey.classList.add('active');
 
-  if (key === 'Shift' || key === 'CapsLock') {
-    shiftHandler();
+  if (targetKey.id === 'ArrowUp'
+    || targetKey.id === 'ArrowLeft'
+    || targetKey.id === 'ArrowRight'
+    || targetKey.id === 'ArrowDown') {
+    textEdit.focus();
+  } else {
+    typeChar(textEdit, targetKey, evt);
   }
 
-  if (pressed.has('MetaLeft') && pressed.has('Space')) {
-    pressed.clear();
-    toggleLang();
+  if (key === 'Shift' || key === 'CapsLock') {
+    toggleCaps();
+  }
+
+  if (code === 'ShiftLeft' || code === 'AltLeft') {
+    pressed.add(code);
+
+    if (pressed.has('ShiftLeft') && pressed.has('AltLeft')) {
+      console.log(pressed);
+      console.log(upperCase);
+      pressed.clear();
+
+      toggleLang();
+      // lang === 'en'
+      //   ? toggleKeysChar('ru', upperCase)
+      //   : toggleKeysChar('en', upperCase);
+    }
   }
 });
 
@@ -111,7 +144,7 @@ document.addEventListener('keyup', (evt) => {
   keyboard.querySelector(`#${code}`).classList.remove('active');
 
   if (key === 'Shift' || key === 'CapsLock') {
-    shiftHandler();
+    toggleCaps();
   }
 });
 
@@ -121,11 +154,21 @@ keyboard.addEventListener('mousedown', (evt) => {
   } = evt;
 
   if (target.classList.contains('key')) {
-    typeChar(textEdit, target);
+    typeChar(textEdit, target, evt);
   }
 
-  if (target.dataset.key === 'Shift' || target.dataset.key === 'CapsLock') {
-    shiftHandler();
+  if (target.dataset.key === 'Shift') {
+    toggleCaps();
+  }
+
+  if (target.dataset.key === 'CapsLock') {
+    toggleCaps();
+
+    if (isUpperCase) {
+      target.classList.add('active');
+    } else {
+      target.classList.remove('active');
+    }
   }
 });
 
@@ -135,6 +178,6 @@ keyboard.addEventListener('mouseup', (evt) => {
   } = evt;
 
   if (target.dataset.key === 'Shift') {
-    shiftHandler();
+    toggleCaps();
   }
 });

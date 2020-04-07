@@ -86,6 +86,23 @@ img {
   box-shadow: 1px 5px 4px #848789, 0 -1px 4px #848789;
 }
 
+.message {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  width: 170px;
+  padding: 5px 10px;
+
+  font-size: 0.8em;
+
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  box-shadow: -1px 3px 5px #333;
+
+  user-select: none;
+}
+
 .window {
   position: absolute;
   top: 10px;

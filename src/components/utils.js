@@ -78,33 +78,51 @@ function setKeysSize(item) {
   }
 }
 
+function setCaretAtEnd(elem) {
+  const node = elem;
+  const elemLen = node.value.length;
+  if (node.selectionStart || node.selectionStart === 0) {
+    node.selectionStart = elemLen;
+    node.selectionEnd = elemLen;
+    node.focus();
+  }
+}
+
 function isCharKey(key) {
   const text = key.textContent.trim();
   return text.length && text.charCodeAt(0) < 8500;
 }
 
-function typeChar(where, target) {
+function typeChar(elem, target, evt) {
+  evt.preventDefault();
   const dataCode = target.id;
-  const node = where;
+  const node = elem;
+  const cursorPosition = elem.selectionStart;
+  node.focus();
+
+  function concatValue(cursor, position, char) {
+    node.value = `${node.value.slice(0, cursorPosition + position)}${char}${node.value.slice(cursorPosition)}`;
+    node.selectionEnd = cursorPosition + cursor;
+  }
 
   if (isCharKey(target)) {
-    node.value += target.textContent.trim();
+    concatValue(1, 0, target.textContent.trim());
   } else {
     switch (dataCode) {
       case 'Backspace':
-        node.value = node.value.slice(0, -1);
+        concatValue(-1, -1, '');
         break;
 
       case 'Space':
-        node.value += ' ';
+        concatValue(1, 0, ' ');
         break;
 
       case 'Tab':
-        node.value += '\t';
+        concatValue(1, 0, '\t');
         break;
 
       case 'Enter':
-        node.value += '\n';
+        concatValue(1, 0, '\n');
         break;
 
       default:
@@ -133,5 +151,5 @@ function runOnKeys(func, ...codes) {
 }
 
 export {
-  setKeysName, setKeysSize, isCharKey, typeChar, runOnKeys,
+  setKeysName, setKeysSize, setCaretAtEnd, isCharKey, typeChar, runOnKeys,
 };

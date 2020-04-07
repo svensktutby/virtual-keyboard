@@ -6,6 +6,7 @@ module.exports = function () {
       new FaviconsWebpackPlugin({
         logo: './favicon.png', // svg works too!
         cache: true,
+        outputPath: '/img/favicons',
         prefix: 'img/favicons',
         mode: 'webapp', // optional can be 'webapp' or 'light' - 'webapp' by default
         devMode: 'webapp', // optional can be 'webapp' or 'light' - 'light' by default
