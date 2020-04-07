@@ -87,12 +87,13 @@ const toggleLang = () => {
 };
 
 const toggleCaps = () => {
+  const currentLang = window.localStorage.getItem('lang') || 'en';
   if (!isUpperCase) {
     isUpperCase = true;
-    toggleKeysChar(lang, 'upper');
+    toggleKeysChar(currentLang, 'upper');
   } else {
     isUpperCase = false;
-    toggleKeysChar(lang, 'lower');
+    toggleKeysChar(currentLang, 'lower');
   }
 };
 
@@ -104,15 +105,17 @@ document.addEventListener('keydown', (evt) => {
 
   const targetKey = keyboard.querySelector(`#${code}`);
 
-  targetKey.classList.add('active');
+  if (targetKey) {
+    targetKey.classList.add('active');
 
-  if (targetKey.id === 'ArrowUp'
-    || targetKey.id === 'ArrowLeft'
-    || targetKey.id === 'ArrowRight'
-    || targetKey.id === 'ArrowDown') {
-    textEdit.focus();
-  } else {
-    typeChar(textEdit, targetKey, evt);
+    if (targetKey.id === 'ArrowUp'
+      || targetKey.id === 'ArrowLeft'
+      || targetKey.id === 'ArrowRight'
+      || targetKey.id === 'ArrowDown') {
+      textEdit.focus();
+    } else {
+      typeChar(textEdit, targetKey, evt);
+    }
   }
 
   if (key === 'Shift' || key === 'CapsLock') {
@@ -136,7 +139,11 @@ document.addEventListener('keyup', (evt) => {
     key,
   } = evt;
 
-  keyboard.querySelector(`#${code}`).classList.remove('active');
+  const targetKey = keyboard.querySelector(`#${code}`);
+
+  if (targetKey) {
+    targetKey.classList.remove('active');
+  }
 
   if (key === 'Shift' || key === 'CapsLock') {
     toggleCaps();
